@@ -19,12 +19,25 @@ const veterinarioRegister = async (req, res) => {
   }
 };
 
-const confirmar = (req, res) => {
-  const token = req.params;
+const confirmar = async (req, res) => {
+  const token = req.params.token;
+
+  const user = await Veterinario.findOne({ token });
+
+  try {
+    if (!user) {
+      res.status(404).json({ messsage: "cuenta no autenticada" });
+    } else {
+      user.token = null;
+      user.confirmado = true;
+      await user.save();
+      res.status(200).json({ msg: "cuenta autenticada" });
+    }
+  } catch (error) {
+    res.status(404).json({ messsage: error });
+  }
 
   console.log(token);
-  res.json({ msg: 'confirmando cuenta' });
-  
-}
+};
 
-module.exports = {veterinarioRegister, confirmar};
+module.exports = { veterinarioRegister, confirmar };
