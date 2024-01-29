@@ -1,4 +1,5 @@
 const Veterinario = require("../models/Veterinarios");
+const jwt = require('jsonwebtoken');
 
 const veterinarioRegister = async (req, res) => {
   const { email, password, name } = req.body;
@@ -15,7 +16,7 @@ const veterinarioRegister = async (req, res) => {
 
     res.status(200).json({ message: "USUARIO REGISTRADO" });
   } catch (error) {
-    res.status(404).json({ messsage: "NO SE PUDO REGISTRAR EL  USUARIO" });
+    res.status(404).json({ messsage: "NO SE PUDO REGISTRAR EL  USUARIO", error });
   }
 };
 
@@ -40,4 +41,42 @@ const confirmar = async (req, res) => {
   console.log(token);
 };
 
-module.exports = { veterinarioRegister, confirmar };
+const autenticarLogin = async (req, res) => {
+  const { password, email } = req.body;
+
+  const user = await Veterinario.findOne({ email });
+
+  if (!user) {
+   return res
+      .status(404)
+      .json({ message: "Usuario no registrado, por favor registrate" });
+  } else if (!user.confirmado) {
+   return res
+      .status(404)
+      .json({
+        message:
+          "Usuario no confirmado, por favor ingrese a su mail y confirme su cuenta",
+      });
+
+  }
+
+  const token = jwt.sign(
+    {
+      id_user: user.id,
+      username: user.name,
+    },
+    process.env.JWT
+  );
+  
+  try {
+    if (await user.comprobarPassword(password)) {
+      res.status(200).json({message: "Acceso correcto", token})
+    }else{
+      res.status(500).json({message: "Contraseña incorrecta"})
+    }
+  } catch (error) {
+    res.status(400).json({message: "Error en el servidor"})
+  } 
+};
+
+module.exports = { veterinarioRegister, confirmar, autenticarLogin };

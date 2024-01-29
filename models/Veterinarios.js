@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const tokenId = require("../helpers/tokenId")
+const bcrypt = require("bcrypt");
 
 const veterinariosSchema = mongoose.Schema({
   name: {
@@ -36,6 +37,20 @@ const veterinariosSchema = mongoose.Schema({
   },
 });
 
+
+veterinariosSchema.pre('save', async function (next) {
+  if(!this.isModified("password")){
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+
+  this.password  = await bcrypt.hash(this.password, salt);
+})
+
+veterinariosSchema.methods.comprobarPassword = async function (passwordFormulario) {
+  return await bcrypt.compare(passwordFormulario, this.password)
+}
 
 const Veterinario = mongoose.model("Veterinario", veterinariosSchema)
 
