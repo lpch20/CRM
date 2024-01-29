@@ -65,7 +65,8 @@ const autenticarLogin = async (req, res) => {
       id_user: user.id,
       username: user.name,
     },
-    process.env.JWT
+    process.env.JWT,
+    { expiresIn: '1h' }
   );
   
   try {
@@ -78,5 +79,9 @@ const autenticarLogin = async (req, res) => {
     res.status(400).json({message: "Error en el servidor"})
   } 
 };
+const perfil = async (req, res) => {
+  const perfil = req.userLogin;
+  res.status(200).json({message: "Acceso correcto", perfil})
+};
 
-module.exports = { veterinarioRegister, confirmar, autenticarLogin };
+module.exports = { veterinarioRegister, confirmar, autenticarLogin, perfil};
