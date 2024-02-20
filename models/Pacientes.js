@@ -1,0 +1,36 @@
+const mongoose = require('mongoose');
+
+const pacientesSchema = mongoose.Schema({
+    nombre:{
+        type: String,
+        required: true,
+    },
+    propietario:{
+        type: String,
+        required: true,
+    },
+    email:{
+        type: String,
+        required: true,
+    },
+    fechaAlta:{
+        type: Date,
+        required: true,
+        default: Date.now()
+    },
+    sintomas:{
+        type: String,
+        required: true,
+    },
+    veterinario:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Veterinarios', 
+    }
+
+},{
+    timestamps: true,
+})
+
+const Paciente = mongoose.model("Paciente", pacientesSchema);
+
+module.exports = Paciente;
