@@ -26,28 +26,16 @@ const crearPaciente = async (req, res) => {
 };
 
 const obtenerPaciente = async (req, res) => {
-  const { nombre, propietario, email, fechAlta, sintomas } = req.body;
-  console.log(req.userLogin._id);
-  const existePaciente = await Paciente.findOne({ nombre: nombre });
+  const pacientes = await Paciente.find().where('veterinario').equals(req.userLogin._id);
 
-  if (existePaciente) {
-    res.status(400).json({ message: "El paciente ya se encuentra registrado" });
-  } else {
-    try {
-      const insertUser = Paciente({
-        nombre: nombre,
-        propietario: propietario,
-        email: email,
-        sintomas: sintomas,
-        veterinario: req.userLogin._id,
-      });
-      await insertUser.save();
-
-      res.status(200).json({ message: "Paciente registrado correctamente" });
-    } catch (error) {
-      res.status(404).json({ message: "Error en el servidor", error });
-    }
+  if (!pacientes) {
+    res.status(400).json({ message: "No se encuentra el paciente" });
+  } 
+  try{
+  res.status(200).json({ message: "Paciente encontrados",pacientes });
+  }catch (error) {
+    res.status(404).json({ message: "Error en el servidor", error });
   }
-};
+}
 
 module.exports = { crearPaciente, obtenerPaciente };
