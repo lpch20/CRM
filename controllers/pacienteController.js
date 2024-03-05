@@ -26,16 +26,85 @@ const crearPaciente = async (req, res) => {
 };
 
 const obtenerPaciente = async (req, res) => {
-  const pacientes = await Paciente.find().where('veterinario').equals(req.userLogin._id);
+  const { id } = req.params;
 
-  if (!pacientes) {
-    res.status(400).json({ message: "No se encuentra el paciente" });
-  } 
-  try{
-  res.status(200).json({ message: "Paciente encontrados",pacientes });
-  }catch (error) {
+  const pacientes = await Paciente.findById(id);
+
+  try {
+    if (pacientes.veterinario._id.toString() !== req.userLogin._id.toString()) {
+      res.status(400).json({ message: "No se encuentra el paciente" });
+    } else {
+      res.status(200).json({ message: "Paciente encontrados", pacientes });
+    }
+  } catch (error) {
     res.status(404).json({ message: "Error en el servidor", error });
   }
-}
+};
 
-module.exports = { crearPaciente, obtenerPaciente };
+const modificarPaciente = async (req, res) => {
+  const { id } = req.params;
+  const {
+    newName,
+    newPropietario,
+    newEmail,
+    newFechaAlta,
+    newSintomas,
+    newVeterinario,
+  } = req.body;
+
+  try {
+    const paciente = await Paciente.findById(id);
+
+    if (!paciente) {
+      return res.status(404).json({ message: "No se encuentra el paciente" });
+    }
+
+    if (paciente.veterinario && paciente.veterinario._id.toString() !== req.userLogin._id.toString()) {
+      return res.status(400).json({ message: "No tienes permiso para modificar este paciente" });
+    }
+
+    paciente.nombre = !newName ? paciente.nombre = paciente.nombre : newName;
+    paciente.propietario =  !newPropietario ? paciente.propietario = paciente.propietario : newPropietario;
+    paciente.email = !newEmail ? paciente.email = paciente.email : newEmail;
+    paciente.fechaAlta = !newFechaAlta ? paciente.fechAlta = paciente.fechAlta : newFechaAlta;
+    paciente.sintomas = !newSintomas ? paciente.sintomas = paciente.sintomas : newSintomas;
+    paciente.veterinario = !newVeterinario ? paciente.veterinario = paciente.veterinario : newPropietario;
+    paciente.fechaAlta = !newFechaAlta ? paciente.fechaAlta = Date.now() : Date.now();
+
+    const pacienteActualizado = await paciente.save();
+    res.status(200).json({ message: "Paciente modificado", pacienteActualizado });
+  } catch (error) {
+    res.status(500).json({ message: "Error en el servidor", error });
+  }
+};
+
+
+const eliminarPaciente = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const paciente = await Paciente.findById(id);
+
+    if (!paciente) {
+      return res.status(404).json({ message: "No se encuentra el paciente" });
+    }
+
+    if (paciente.veterinario._id.toString() !== req.userLogin._id.toString()) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este paciente" });
+    }
+
+    await paciente.deleteOne();
+    res.status(200).json({ message: "Paciente eliminado correctamente" });
+  } catch (error) {
+    console.error("Error en el servidor:", error);
+    res.status(500).json({ message: "Error en el servidor", error: error.message });
+  }
+};
+
+
+module.exports = {
+  crearPaciente,
+  obtenerPaciente,
+  eliminarPaciente,
+  modificarPaciente,
+};
