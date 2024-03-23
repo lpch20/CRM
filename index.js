@@ -6,6 +6,7 @@ const hostname = "localhost";
 const veterinarioRoutes = require("./routers/veterinariosRoutes");
 const pacientesRoutes = require("./routers/pacientesRouter");
 
+
 const app = express();
 dotenv.config();
 app.use(express.json());
