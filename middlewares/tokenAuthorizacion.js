@@ -7,6 +7,8 @@ exports.verifyToken =  async (req, res, next) => {
       res.status(401).json({ error: "Acceso al recurso denegado" });
       return;
     }
+
+    console.log(token)
     try {
       const verified = jwt.verify(token,  process.env.JWT);
       req.user = verified;

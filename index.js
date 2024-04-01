@@ -4,7 +4,7 @@ const cors = require('cors')
 const dotenv = require("dotenv");
 const hostname = "localhost";
 const veterinarioRoutes = require("./routers/veterinariosRoutes");
-const pacientesRoutes = require("./routers/pacientesRouter");
+const pacientesRoutes = require("./routers/pacientesRoutes")
 
 
 const app = express();

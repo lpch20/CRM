@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const pacientesSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   propietario: {
     type: String,
@@ -12,8 +13,7 @@ const pacientesSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
+    trim: true
   },
   fecha: {
     type: Date,
