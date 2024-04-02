@@ -3,8 +3,7 @@ const Paciente = require("../models/Pacientes.js");
 const crearPaciente = async (req, res) => {
   const { name, propietario, email, fecha, sintomas } = req.body;
 
-  console.log(name);
-  console.log(req.userLogin._id);
+
 
   try {
     const existePaciente = await Paciente.findOne({ name: name });
@@ -41,7 +40,6 @@ module.exports = crearPaciente;
 const obtenerPaciente = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id)
 
   try {
     const pacientes = await Paciente.findById(id);
@@ -61,7 +59,6 @@ const obtenerAllPaciente = async (req, res) => {
       veterinario: req.userLogin._id,
     });
 
-    console.log([pacientesAll]);
     if (!pacientesAll) {
       res.status(400).json({ error: "No se encuentra el paciente" });
     }
@@ -75,7 +72,6 @@ const obtenerAllPaciente = async (req, res) => {
 const modificarPaciente = async (req, res) => {
   const { id } = req.params;
 
-  console.log("EL FUCKING", id)
   const {
     newName,
     newPropietario,
@@ -84,11 +80,10 @@ const modificarPaciente = async (req, res) => {
     newSintomas,
   } = req.body;
 
-  
+  console.log("NEW NAME", newName)
+
   try {
     const paciente = await Paciente.findById(id);
-
-    console.log(paciente);
 
     if (!paciente) {
       return res.status(404).json({ message: "No se encuentra el paciente" });
@@ -103,7 +98,7 @@ const modificarPaciente = async (req, res) => {
         .json({ message: "No tienes permiso para modificar este paciente" });
     }
 
-    paciente.nombre = !newName ? (paciente.nombre = paciente.nombre) : newName;
+    paciente.name = !newName ? (paciente.name = paciente.nombre) : newName;
     paciente.propietario = !newPropietario
       ? (paciente.propietario = paciente.propietario)
       : newPropietario;
@@ -120,7 +115,6 @@ const modificarPaciente = async (req, res) => {
 
     const pacienteActualizado = await paciente.save();
 
-    console.log(pacienteActualizado);
     res
       .status(200)
       .json({ message: "Paciente modificado", pacienteActualizado });
@@ -133,6 +127,8 @@ const modificarPaciente = async (req, res) => {
 
 const eliminarPaciente = async (req, res) => {
   const { id } = req.params;
+
+  console.log("EL TROLASOOOOOOOOOOOOOOOO",id)
 
   try {
     const paciente = await Paciente.findById(id);
