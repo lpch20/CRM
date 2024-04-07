@@ -4,7 +4,6 @@ const tokenId = require("../helpers/tokenId");
 const emailRegister = require("../helpers/sendEmailRegister");
 const emailPasswordRecovery = require("../helpers/sendEmailPasswordRecovery");
 
-
 const veterinarioRegister = async (req, res) => {
   const { email, password, name } = req.body;
   const userEmailExist = await Veterinario.findOne({ email });
@@ -20,7 +19,7 @@ const veterinarioRegister = async (req, res) => {
 
     //ENVIO DE EMAIL CON NODEMAILER
 
-    emailRegister({email, name, token: veterinarioSave.token})
+    emailRegister({ email, name, token: veterinarioSave.token });
 
     res.status(200).json({ message: "USUARIO REGISTRADO" });
   } catch (error) {
@@ -90,11 +89,22 @@ const autenticarLogin = async (req, res) => {
 const perfil = async (req, res) => {
   const perfil = req.userLogin;
 
-  res.status(200).json({ message: "Acceso correcto", perfil });
+  try {
+    if(!perfil){
+      res.status(500).json({ error: "No se encuentra el perfil" });
+      return;
+    }
+
+    res.status(200).json({ message: "Acceso correcto", perfil });
+  } catch (error) {
+    res.status(400).json({ message: "Error en el servidor" });
+  }
 };
 
 const lostPassword = async (req, res) => {
   const { email } = req.body;
+
+  console.log(email);
 
   const user = await Veterinario.findOne({ email });
 
@@ -111,11 +121,11 @@ const lostPassword = async (req, res) => {
     const datos = {
       email: user.email,
       name: user.name,
-      token: user.token
-    }
+      token: user.token,
+    };
 
     await user.save();
-    emailPasswordRecovery(datos)
+    emailPasswordRecovery(datos);
     res.status(200).json({ message: "Revise su mail" });
   } catch (error) {
     res.status(404).json({ error });
@@ -136,14 +146,19 @@ const confirmToken = async (req, res) => {
 
 const newPassword = async (req, res) => {
   const { token } = req.params;
-  const { password }  = req.body;
+  const { password } = req.body;
 
+  console.log(req.body)
+  console.log(req.params.token[0])
 
   const user = await Veterinario.findOne({ token });
   if (!user) {
-    res.status(400).json({ error: "No podras recuperar tu contraseña sin antes recibir un correo" });
+    res
+      .status(400)
+      .json({
+        error: "No podras recuperar tu contraseña sin antes recibir un correo",
+      });
   } else {
-
     try {
       user.password = password;
       user.token = null;
@@ -154,7 +169,6 @@ const newPassword = async (req, res) => {
       res.status(404).json({ error });
     }
   }
-
 };
 
 module.exports = {
@@ -164,5 +178,5 @@ module.exports = {
   perfil,
   lostPassword,
   confirmToken,
-  newPassword
+  newPassword,
 };
