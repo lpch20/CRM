@@ -47,7 +47,6 @@ const confirmar = async (req, res) => {
   } catch (error) {
     res.status(404).json({ messsage: error });
   }
-
 };
 
 const autenticarLogin = async (req, res) => {
@@ -90,14 +89,45 @@ const perfil = async (req, res) => {
   const perfil = req.userLogin;
 
   try {
-    if(!perfil){
+    if (!perfil) {
       res.status(500).json({ error: "No se encuentra el perfil" });
       return;
     }
 
     res.status(200).json({ message: "Acceso correcto", perfil });
   } catch (error) {
-    res.status(400).json({ message: "Error en el servidor" });
+    res.status(404).json({ message: "Error en el servidor" });
+  }
+};
+
+const editProfile = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, telefono, web } = req.body;
+
+  console.log(id);
+
+  console.log(telefono, web)
+
+  const vet = await Veterinario.findOne({ _id: id });
+
+  console.log("EL VET", vet);
+
+  try {
+    if (!vet) {
+      res.status(500).json({ error: "No se pudo aztualizar el perfil" });
+      return;
+    } else {
+      vet.name = name;
+      vet.email = email;
+      vet.telefono = telefono;
+      vet.web = web;
+
+      await vet.save();
+    }
+
+    res.status(200).json({ message: "Perfil actualizado", vet });
+  } catch (error) {
+    res.status(404).json({ message: "Error en el servidor" });
   }
 };
 
@@ -148,16 +178,14 @@ const newPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
-  console.log(req.body)
-  console.log(req.params.token[0])
+  console.log(req.body);
+  console.log(req.params.token[0]);
 
   const user = await Veterinario.findOne({ token });
   if (!user) {
-    res
-      .status(400)
-      .json({
-        error: "No podras recuperar tu contraseña sin antes recibir un correo",
-      });
+    res.status(400).json({
+      error: "No podras recuperar tu contraseña sin antes recibir un correo",
+    });
   } else {
     try {
       user.password = password;
@@ -179,4 +207,5 @@ module.exports = {
   lostPassword,
   confirmToken,
   newPassword,
+  editProfile,
 };

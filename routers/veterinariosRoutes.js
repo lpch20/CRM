@@ -1,6 +1,6 @@
 // veterinariosRoutes.js
 const express = require('express');
-const { veterinarioRegister, confirmar, autenticarLogin, perfil, lostPassword, confirmToken, newPassword } = require('../controllers/veterinarioController');
+const { veterinarioRegister, confirmar, autenticarLogin, perfil, lostPassword, confirmToken, newPassword, editProfile } = require('../controllers/veterinarioController');
 const { verifyToken } = require('../middlewares/tokenAuthorizacion');
 
 const router = express.Router();
@@ -14,6 +14,7 @@ router.get('/lostPassword/:token', confirmToken);
 router.put('/lostPassword/:token', newPassword);
 
 //area privada
-router.get('/perfil', verifyToken, perfil );
+router.get('/perfil', verifyToken, perfil);
+router.put('/editProfile/:id', editProfile)
 
 module.exports = router;
