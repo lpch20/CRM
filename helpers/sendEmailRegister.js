@@ -21,7 +21,6 @@ const emailRegister = async (datos) => {
     `
   })
 
-  console.log(info)
 };
 
 

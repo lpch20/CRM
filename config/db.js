@@ -12,7 +12,6 @@ const connectDB = async () => {
 
     const url =  `${db.connection.host}:${db.connection.port}`
 
-    console.log('conectado', url)
   } catch (error) {
     console.log(error);
   }

@@ -80,7 +80,6 @@ const modificarPaciente = async (req, res) => {
     newSintomas,
   } = req.body;
 
-  console.log("NEW NAME", newName)
 
   try {
     const paciente = await Paciente.findById(id);
@@ -127,8 +126,6 @@ const modificarPaciente = async (req, res) => {
 
 const eliminarPaciente = async (req, res) => {
   const { id } = req.params;
-
-  console.log("EL TROLASOOOOOOOOOOOOOOOO",id)
 
   try {
     const paciente = await Paciente.findById(id);

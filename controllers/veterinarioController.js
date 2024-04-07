@@ -49,7 +49,6 @@ const confirmar = async (req, res) => {
     res.status(404).json({ messsage: error });
   }
 
-  console.log(token);
 };
 
 const autenticarLogin = async (req, res) => {
@@ -97,8 +96,6 @@ const perfil = async (req, res) => {
 const lostPassword = async (req, res) => {
   const { email } = req.body;
 
-  console.log(email)
-
   const user = await Veterinario.findOne({ email });
 
   if (!user) {
@@ -141,8 +138,6 @@ const newPassword = async (req, res) => {
   const { token } = req.params;
   const { password }  = req.body;
 
-  console.log(req.body)
-  console.log(req.params.token[0])
 
   const user = await Veterinario.findOne({ token });
   if (!user) {

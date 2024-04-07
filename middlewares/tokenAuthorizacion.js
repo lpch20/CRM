@@ -8,12 +8,11 @@ exports.verifyToken =  async (req, res, next) => {
       return;
     }
 
-    console.log(token)
     try {
       const verified = jwt.verify(token,  process.env.JWT);
       req.user = verified;
       req.userLogin = await Veterinario.findById(verified.id_user).select("-password -token -confirmado")
-      console.log(req.userLogin);
+
       next();
     } catch (error) {
       res.status(400).json({ error: "El token es invalido", mensaje: error });

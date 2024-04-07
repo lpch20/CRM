@@ -22,7 +22,6 @@ const emailPasswordRecovery = async (datos) => {
     `
   })
 
-  console.log(datos)
 };
 
 
