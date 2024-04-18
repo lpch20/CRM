@@ -2,11 +2,18 @@ const nodemailer = require("nodemailer");
 
 const emailRegister = async (datos) => {
   const transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: "gmail",
+    port:465,
+    secure: true,
+    logger: true,
+    debug: true,
+    secureConnection: false, 
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: "vetcrmplataform@gmail.com",
+      pass: "wwtc fdyq uatz hzoq",
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 

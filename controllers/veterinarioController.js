@@ -29,6 +29,36 @@ const veterinarioRegister = async (req, res) => {
   }
 };
 
+const sendTokenAgain = async (req, res) => {
+  const { email, name } = req.body;
+
+  console.log(email, name)
+
+  try {
+    const newToken = tokenId();
+
+    console.log(newToken)
+
+    const insertUser = await Veterinario.findOne({ email });
+
+    insertUser.token = newToken;
+
+    const veterinarioSave = await insertUser.save();
+
+    console.log(veterinarioSave)
+
+    //ENVIO DE EMAIL CON NODEMAILER
+
+    emailRegister({ email, name, token: veterinarioSave.token });
+
+    res.status(200).json({ message: "EMAIL ENVIADO NUEVAMENTE" });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ messsage: "NO SE PUDO ENVIAR EL MAIL", error });
+  }
+};
+
 const confirmar = async (req, res) => {
   const token = req.params.token;
 
@@ -208,4 +238,5 @@ module.exports = {
   confirmToken,
   newPassword,
   editProfile,
+  sendTokenAgain
 };
