@@ -9,8 +9,8 @@ const emailRegister = async (datos) => {
     debug: true,
     secureConnection: false, 
     auth: {
-      user: "vetcrmplataform@gmail.com",
-      pass: "wwtc fdyq uatz hzoq",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
     tls: {
       rejectUnauthorized: false,
