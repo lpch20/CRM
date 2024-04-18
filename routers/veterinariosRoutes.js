@@ -7,12 +7,12 @@ const router = express.Router();
 
 // area publica
 router.post('/register', veterinarioRegister);
-router.put('/sendTokenAgain', sendTokenAgain);
-router.get('/confirmar/:token', confirmar) 
 router.post('/login', autenticarLogin);
 router.post('/lostPassword', lostPassword);
+router.get('/confirmar/:token', confirmar) 
 router.get('/lostPassword/:token', confirmToken);
 router.put('/lostPassword/:token', newPassword);
+router.put('/sendTokenAgain', sendTokenAgain);
 
 
 //area privada
