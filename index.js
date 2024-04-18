@@ -18,6 +18,6 @@ app.use("/api", pacientesRoutes)
 
 const PORT = process.env.PORT || 2000;
 
-app.listen(PORT, hostname, () => {
-  console.log(`Server running at http://${hostname}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
