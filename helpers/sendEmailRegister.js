@@ -24,7 +24,7 @@ const emailRegister = async (datos) => {
     text: 'Comprobacion de cuenta en APV',
     html: `<p>Hola: ${datos.name}, comprueba tu cuenta en APV</p>
     <p>Tu cuenta ya esta lista solo debes activarla en el siguiente enlace:</p>
-    <a href="http://localhost:5173/confirm_account/${datos.token}">Comprobar Cuenta</a>
+    <a href="https://crm-front-mu.vercel.app/confirm_account/${datos.token}">Comprobar Cuenta</a>
     `
   })
 
