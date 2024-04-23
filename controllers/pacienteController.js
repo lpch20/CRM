@@ -3,8 +3,6 @@ const Paciente = require("../models/Pacientes.js");
 const crearPaciente = async (req, res) => {
   const { name, propietario, email, fecha, sintomas } = req.body;
 
-
-
   try {
     const existePaciente = await Paciente.findOne({ name: name });
 
@@ -39,7 +37,6 @@ module.exports = crearPaciente;
 
 const obtenerPaciente = async (req, res) => {
   const { id } = req.params;
-
 
   try {
     const pacientes = await Paciente.findById(id);
