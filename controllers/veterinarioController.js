@@ -49,7 +49,7 @@ const sendTokenAgain = async (req, res) => {
 
     //ENVIO DE EMAIL CON NODEMAILER
 
-    emailRegister({ email, name, token: veterinarioSave.token });
+    emailPasswordRecovery({ email, name, token: veterinarioSave.token });
 
     res.status(200).json({ message: "EMAIL ENVIADO NUEVAMENTE" });
   } catch (error) {
